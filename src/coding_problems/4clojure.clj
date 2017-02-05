@@ -102,7 +102,7 @@
 
 
 
-; #173 Intro to destructuring 2
+; #173 Intro to destructuring 2 :TODO:
 
 (= 3
    (let [[op :as all] [+ (range 3)]] (apply op (rest all)))
@@ -112,6 +112,21 @@
 ;; issue in filling the blanks...
 
 
+
+;; #147 Pascal's Trapezoid
+
+
+(defn pas
+  [xs]
+  (iterate (fn [xs] (vec (map +' (cons 0 xs) (conj xs 0)))) xs)) 
+
+
+(fn [x]
+  (iterate (fn [v] (concat
+                     [(first v)]
+                     (map (partial apply +) (partition 2 1 v))
+                     [(last v)]))
+           x))
 
 
 
