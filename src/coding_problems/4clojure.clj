@@ -160,3 +160,24 @@
                   (= a b))) l r))
 
 
+; #146 Trees into tables
+
+#(into {} (for [k1 (keys %)
+               [k2 v] (get % k1)
+               ;v (mapcat vals (vals m))
+               ]
+           [[k1 k2] v]))
+
+
+
+#(into {}
+       (for [[k v] m
+             [k2 v2] v]
+         [[k k2] v2]))
+
+
+
+
+
+
+
