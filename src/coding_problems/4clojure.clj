@@ -169,15 +169,31 @@
            [[k1 k2] v]))
 
 
-
 #(into {}
        (for [[k v] m
              [k2 v2] v]
          [[k k2] v2]))
 
+; #153 Pairwise Disjoint Sets
+
+#(apply distinct? (apply concat %))
+
+
+;#46  Flipping out
+
+(fn flip [f]
+  (fn [a b]
+    (f b a)))
+
+#(fn [a b] (% b a))
+
+;#44 Rotate Sequence
+
+((fn [n coll]
+   (let [x (mod n (count coll))]
+     (concat (drop x coll) (take x coll)))) 2 [1 2 3 4 5])
 
 
 
-
-
+#(let [n (count %2)] (take n (drop (mod % n) (cycle %2))))
 
