@@ -68,3 +68,39 @@
   {:suit ({\D :diamond \H :heart \C :club \S :space} s)
    :rank ((zipmap "23456789TJQKA" (range)) r)})
 
+
+
+(take  8)
+
+
+
+
+(take 5 (#(iterate (partial + %) %) 3))
+
+#(iterate (partial + %) %)
+
+((fn [& xs] (first (apply clojure.set/intersection
+                         (map (fn [x] (apply sorted-set (take 500 (iterate (partial + x) x))))
+                              xs)))))
+
+
+
+(fn [x & xs]
+  (first
+    (drop-while
+      (fn [z] (some #(pos? (mod z %)) xs))
+      (iterate #(+ x %) x))))
+
+
+
+(fn lcm [& args]
+  (letfn [(gcd [a b]
+            (if (zero? b)
+              a
+              (gcd b (mod a b))))]
+    (reduce #(/ (* % %2) (gcd % %2)) args)))
+
+
+
+
+
