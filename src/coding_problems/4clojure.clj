@@ -70,7 +70,7 @@
 
 
 
-(take  8)
+
 
 
 
@@ -129,5 +129,34 @@
            x))
 
 
+; #96  Beauty is Symmetry 
+
+
+(fn sym?  [node]
+  (let [rv (fn rv [node]
+             (if (coll? node)
+               (list (nth node 0)
+                     (rv (nth node 2))
+                     (rv (nth node 1)))
+               node))]
+    (and (coll? node)
+       (= (rv (nth node 1))
+          (nth node 2)))))
+
+
+(fn [[v l r]]
+  (= l
+     ((fn mirror [[v l r :as t]]
+        (when t [v (mirror r) (mirror l)])) r)))
+
+
+(fn [[_ l r]] ((fn check [a b]
+                (if (coll? a)
+                  (let [[ak al ar] a
+                        [bk bl br] b]
+                    (and (= ak bk)
+                         (check al br)
+                         (check ar bl)))
+                  (= a b))) l r))
 
 
