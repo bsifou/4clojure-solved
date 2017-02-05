@@ -102,5 +102,17 @@
 
 
 
+; #173 Intro to destructuring 2
+
+(= 3
+   (let [[op :as all] [+ (range 3)]] (apply op (rest all)))
+   (let [[[:as all] b] [[+ 1] 2]] ((first all) (second all) b))
+   (let [[:as all] [inc 2]] ((first all) (second all))))
+
+;; issue in filling the blanks...
+
+
+
+
 
 
