@@ -305,3 +305,14 @@
       r)))
 
 
+((fn part-2 [n coll]
+  (when-let [s (seq coll)]
+    (let [p (take n s)]
+      (when (= (count p) n)
+        (cons p (part-2 n (nthrest s n))))))) 3 (range 9))
+
+
+
+
+
+
