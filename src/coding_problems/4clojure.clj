@@ -69,12 +69,6 @@
    :rank ((zipmap "23456789TJQKA" (range)) r)})
 
 
-
-
-
-
-
-
 (take 5 (#(iterate (partial + %) %) 3))
 
 #(iterate (partial + %) %)
@@ -304,15 +298,20 @@
       (recur (drop n s) (conj r (take n s)))
       r)))
 
-
 ((fn part-2 [n coll]
   (when-let [s (seq coll)]
     (let [p (take n s)]
       (when (= (count p) n)
         (cons p (part-2 n (nthrest s n))))))) 3 (range 9))
 
+;# 59 Juxtaposition
 
+(fn jxt
+  [& fns]
+  (fn [& args]
+    (map #(apply %1 args) fns)))
 
-
-
-
+(fn jxt-2
+  [& fns]
+  (fn [& args]
+    (reduce #(conj %1 (apply %2 args)) [] fns)))
