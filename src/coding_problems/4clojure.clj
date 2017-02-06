@@ -245,3 +245,39 @@
 ; shorter, use the default get paramater when looking up key in map
 (reduce #(assoc %1 %2 (inc (%1 %2 0))) {}  [1 1 2 3 2 1 1])
 
+
+; #56 Find Distinct items
+
+
+(fn de-dup [s]
+  (loop [left s
+         bag #{}
+         res (list)]
+    (if-not left 
+      (reverse res)
+      (let [[x & xs] left]
+        (if (bag x)
+          (recur xs bag res)
+          (recur xs (conj bag x) (conj res x)))))))
+
+
+
+(defn de-dup [s]
+  (loop [[x & xs] s
+         bag #{}
+         res []]
+    (if-not x
+      (remove nil? res)
+      (recur xs (conj bag x) (conj res (if (bag x) nil x))))))
+
+
+(reduce (fn [res x]
+          (if (some (partial = x) res)
+            res
+            (conj res x))) [] [1 2 1 3 1 2 4])
+
+
+(fn [s] (remove nil? (map #(if (%2 %1) nil %1) s (reductions conj #{} s))))
+
+
+
