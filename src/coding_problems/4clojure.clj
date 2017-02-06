@@ -226,6 +226,12 @@
 ;; every function tells us a story :) 
 
 
+; #50 split by type
+
+
+(#(set (vals (group-by type %))) [1 :a 2 :b 3 :c])
+
+
 
 
 
