@@ -294,6 +294,14 @@
     (fn [& args]
       (reduce #(%2 %) (apply rf args) rfs))))
 
+; #54 Partition a Sequence
 
+
+(fn part [n s]
+  (loop [s s
+         r []]
+    (if (>= (count s) n)
+      (recur (drop n s) (conj r (take n s)))
+      r)))
 
 
