@@ -231,8 +231,17 @@
 
 (#(set (vals (group-by type %))) [1 :a 2 :b 3 :c])
 
+; #55 Count Occurrences
+
+
+((fn [s]
+   (reduce (fn [m x]
+             (if (m x)
+               (update-in m [x] inc)
+               (assoc m x 1))) {} s)) [1 1 2 3 2 1 1])
 
 
 
-
+; shorter, use the default get paramater when looking up key in map
+(reduce #(assoc %1 %2 (inc (%1 %2 0))) {}  [1 1 2 3 2 1 1])
 
