@@ -21,7 +21,7 @@
              (bn? (second children))))))
 
 (fn bt? [t]
-  (or (nil? t)
+  (or (nil? t)a
       (and (coll? t)
            (= (count t) 3)
            (bt? (nth t 1))
@@ -272,12 +272,28 @@
 
 
 (reduce (fn [res x]
-          (if (some (partial = x) res)
-            res
-            (conj res x))) [] [1 2 1 3 1 2 4])
+          (if (not-any? (partial = x) res)
+            (conj res x)
+            res)) [] [1 2 1 3 1 2 4])
 
 
 (fn [s] (remove nil? (map #(if (%2 %1) nil %1) s (reductions conj #{} s))))
+
+;# 58 Function Composition
+
+(fn comp-1
+  ([f] f)
+  ([f1 f2] (fn [& args] (f1 (apply f2 args))))
+  ;([f1 f2 f3] (comp-1 (comp-1 f1 f2) f3))
+  ([f1 f2 & fs] (reduce (fn [lf f] (comp-1 lf f)) (comp-1 f1 f2) fs)))
+
+
+
+(fn [& fs]
+  (let [[rf & rfs] (reverse fs)]
+    (fn [& args]
+      (reduce #(%2 %) (apply rf args) rfs))))
+
 
 
 
