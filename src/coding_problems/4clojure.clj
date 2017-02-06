@@ -193,7 +193,40 @@
    (let [x (mod n (count coll))]
      (concat (drop x coll) (take x coll)))) 2 [1 2 3 4 5])
 
-
-
 #(let [n (count %2)] (take n (drop (mod % n) (cycle %2))))
+
+
+
+; #43 Reverse Interleave 
+
+(fn  rev-interleave [coll n]
+  (loop [c n
+         left coll
+         res '()]
+    (if (zero? c)
+      (reverse res)
+      (let [add (take-nth c left)
+            left (remove (set add) left)
+            res (conj res add)]
+        (recur (dec c)
+               left
+               res)))))
+
+
+ 
+
+#(apply map list (partition %2 %))
+
+
+(fn r-interleave [s n]
+  (let [shift-add (fn [s val]
+                    (cons (conj (last s) val) (butlast s)))]
+    (reverse (reduce shift-add (repeat n []) s))))
+
+;; every function tells us a story :) 
+
+
+
+
+
 
