@@ -315,3 +315,88 @@
   [& fns]
   (fn [& args]
     (reduce #(conj %1 (apply %2 args)) [] fns)))
+
+;# 
+
+
+
+(defn seive
+  [n]
+  (let [s (map vector (range 2 (inc n)) (vec (repeat (dec n) true)))]
+    (->> (loop [[[i b] & xs] s
+                r s]
+           (if (and xs (<= i (Math/sqrt n))) 
+             (recur
+              xs
+              (if b
+                (let [set
+                      (set
+                       (for [c (range)
+                             :let [j (+ (* i i) (* i c))]
+                             :while (<= j n)]
+                         j))]
+                  (map (fn [[j p?]]
+                         (if (set j) [j false] [j p?])) r))
+                r))
+             r))
+         (filter second)
+         (map first))))
+
+;; :TODO: make github gist for my implementation of the seive algorithm
+;; and check other implemntation pereferbably form kohyama! 
+
+; usin core async! https://github.com/clojure/core.async/wiki/Sieve-of-Eratosthenes
+
+
+
+(defn primes< [n]
+  (if (<= n 2)
+    ()
+    (remove (into #{}
+                  (mapcat #(range (* % %) n %))
+                  (range 3 (Math/sqrt n) 2))
+            (cons 2 (range 3 n 2)))))
+
+
+
+
+
+(defn primes-to
+  "Computes lazy sequence of prime numbers up to a given number using sieve of Eratosthenes"
+  [n]
+  (let [root (-> n Math/sqrt long),
+        cmpsts (boolean-array (inc n)),
+        cullp (fn [p]
+                (loop [i (* p p)]
+                  (if (<= i n)
+                    (do (aset cmpsts i true)
+                        (recur (+ i p))))))]
+    (do (dorun (map #(cullp %) (filter #(not (aget cmpsts %))
+                                       (range 2 (inc root)))))
+        (filter #(not (aget cmpsts %)) (range 2 (inc n))))))
+
+
+(defn primes-to
+  "Returns a lazy sequence of prime numbers less than lim"
+  [lim]
+  (let [refs (boolean-array (+ lim 1) true)
+        root (int (Math/sqrt lim))]
+    (do (doseq [i (range 2 lim)
+                :while (<= i root)
+                :when (aget refs i)]
+          (doseq [j (range (* i i) lim i)]
+            (aset refs j false)))
+        (filter #(aget refs %) (range 2 lim)))))
+
+;todo 
+(defn primes-to
+  "Returns a lazy sequence of prime numbers less than lim"
+  [lim]
+  (let [max-i (int (/ (- lim 1) 2))
+        refs (boolean-array max-i true)
+        root (/ (dec (int (Math/sqrt lim))) 2)]
+    (do (doseq [i (range 1 (inc root))
+                :when (aget refs i)]
+          (doseq [j (range (* (+ i i) (inc i)) max-i (+ i i 1))]
+            (aset refs j false)))
+        (cons 2 (map #(+ % % 1) (filter #(aget refs %) (range 1 max-i)))))))
