@@ -357,7 +357,15 @@
                   (range 3 (Math/sqrt n) 2))
             (cons 2 (range 3 n 2)))))
 
-
+(defn primes-to
+  "Computes lazy sequence of prime numbers up to a given number using sieve of Eratosthenes"
+  [n]
+  (letfn [(nxtprm [cs]                  ; current candidates
+            (let [p (first cs)]
+              (if (> p (Math/sqrt n)) cs
+                  (cons p (lazy-seq (nxtprm (-> (range (* p p) (inc n) p)
+                                                set (remove cs) rest)))))))]
+    (nxtprm (range 2 (inc n)))))
 
 
 
@@ -400,3 +408,24 @@
           (doseq [j (range (* (+ i i) (inc i)) max-i (+ i i 1))]
             (aset refs j false)))
         (cons 2 (map #(+ % % 1) (filter #(aget refs %) (range 1 max-i)))))))
+
+
+;; # 67 prime numbers
+
+
+((fn [n] (take n ((fn primes
+                   ([] (cons 2 (primes 3)))
+                   ([x]
+                    (if (some #(zero? (mod x %)) (range 2 (inc (int (Math/sqrt x)))))
+                      (lazy-seq (primes (inc x)))
+                      (cons x (lazy-seq (primes (inc x)))))))))) 2)
+
+((fn [n]
+   (take n
+         (filter
+          (fn [m] (not-any? zero? (map #(mod m %) (range 2 m))))
+          (iterate inc 2)))) 5)
+
+
+
+
