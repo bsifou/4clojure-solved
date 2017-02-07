@@ -426,6 +426,41 @@
           (fn [m] (not-any? zero? (map #(mod m %) (range 2 m))))
           (iterate inc 2)))) 5)
 
+;#65 Black Box Testing
+
+;; TODO, clean up the redundancies!
+
+(fn t? [s]
+  (cond
+    (= s (into #{} s)) :set
+    (and (associative? s)
+         (not= (count (flatten (assoc s 0 1))) (count (assoc s 0 1)))) :map 
+    (and (= s (into [] s))
+         (associative? s)
+         (= (last (conj s 'spc)) 'spc)) :vector
+    (and (= (reverse s) (into () s))
+         (= (first (conj s 'spc))  'spc))  :list))
+
+
+#(cond
+  (= (count (conj % [0 0]))
+     (count (conj % [0 0] [0 1]))) :map
+  (= (conj % 0) (conj % 0 0)) :set
+  (= (next (conj % 0 1)) (conj % 0)) :list
+  :else :vector)
+
+
+(fn tpe [obj]
+  (let [v [:test :result]
+        obj (conj obj v)]
+    (cond (:test obj)
+          :map
+          (= (conj obj v) obj)
+          :set
+          (= (last (conj obj :aaaa)) :aaaa)
+          :vector
+          :default :list)))
+
 
 
 
