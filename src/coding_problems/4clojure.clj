@@ -1,10 +1,14 @@
 (ns coding-problems.4clojure
   (:gen-class)
   (:require [clojure.core.match :refer [match]])
-  (:require [defun.core :refer [defun]]))
-
+  (:require [defun.core :refer [defun]])
+ (:require [functions-as-patterns.core  :refer :all])
+  )
 
 ;#95
+
+
+
 
 (fn [root]
     (every?
@@ -460,6 +464,26 @@
           (= (last (conj obj :aaaa)) :aaaa)
           :vector
           :default :list)))
+
+; #74 Filter Perfect Squares
+
+((fn [s]
+   (apply str (interpose "," 
+                         (map str (filter (fn [x] (let [root-i (int (Math/sqrt x))]
+                                                   (== (* root-i root-i) x)))))))) )
+
+((fn [s] (->> 
+         (clojure.string/split s  #",")
+         (map read-string)
+          (filter (fn [x] (let [root-i (int (Math/sqrt x))]
+                           (== (* root-i root-i) x))))
+         (map str)
+         (interpose ",")
+         (apply str))) "4,5,6,7,8,9")
+
+
+
+
 
 
 
