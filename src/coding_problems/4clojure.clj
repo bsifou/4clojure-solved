@@ -465,7 +465,7 @@
           :vector
           :default :list)))
 
-; #74 Filter Perfect Squares
+;#74 filter perfect squares 
 
 ((fn [s]
    (apply str (interpose "," 
@@ -480,6 +480,48 @@
          (map str)
          (interpose ",")
          (apply str))) "4,5,6,7,8,9")
+
+
+
+
+
+;; (postwalk-demo [:a :b [:c :d [:e] :f]])
+;; :a
+;; :b
+;; :c
+;; :d
+;; :e
+;; [:e]
+;; :f
+;; [:c :d [:e] :f]
+;; [:a :b [:c :d [:e] :f]]
+
+
+
+;; (prewalk-demo [:a :b [:c :d [:e] :f]])
+
+;; [:a :b [:c :d [:e] :f]]
+;; :a
+;; :b
+;; [:c :d [:e] :f]
+;; :c
+;; :d
+;; [:e]
+;; :f
+
+
+; # 76 Intro to Trampline 
+
+
+(= [1 3 5 7 9 11]
+ (letfn
+     [(foo [x y] #(bar (conj x y) y))
+      (bar [x y] (if (> (last x) 10)
+                   x
+                   #(foo x (+ 2 y))))]
+     (trampoline foo [] 1)))
+
+
 
 
 
