@@ -2,8 +2,7 @@
   (:gen-class)
   (:require [clojure.core.match :refer [match]])
   (:require [defun.core :refer [defun]])
- (:require [functions-as-patterns.core  :refer :all])
-  )
+ (:require [functions-as-patterns.core  :refer :all]))
 
 ;#95
 
@@ -25,7 +24,7 @@
              (bn? (second children))))))
 
 (fn bt? [t]
-  (or (nil? t)a
+  (or (nil? t)
       (and (coll? t)
            (= (count t) 3)
            (bt? (nth t 1))
@@ -522,11 +521,30 @@
      (trampoline foo [] 1)))
 
 
+;; #77 Anagram Finder
+
+(fn ana [s]
+  (loop [[f & xs] (seq s)
+         set #{}]
+    (if f
+      (let [found (reduce (fn [r x] (if (and
+                                        
+                                        ;(every? #(clojure.string/includes? f (str %)) x)
+                                        (= (frequencies x) (frequencies f)))
+                                     (conj r x)
+                                     r)) #{} xs)]
+        (if (empty? found)
+          (recur xs set)
+          (recur (remove found xs) (conj set (conj found f)))))
+      set)))
 
 
 
 
 
-
-
+#(set (map set
+      (remove (comp zero? dec  count)
+              (vals (group-by frequencies %)
+                    ;(group-by sort  ["meat" "mat" "team" "mate" "eat"])
+                    ))))
 
