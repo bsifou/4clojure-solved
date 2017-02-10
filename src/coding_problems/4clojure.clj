@@ -2,9 +2,9 @@
   (:gen-class)
   (:require [clojure.core.match :refer [match]])
   (:require [defun.core :refer [defun]])
- (:require [functions-as-patterns.core  :refer :all]))
+ (:require [functions-as-patterns.core  :refer :all]))o
 
-;#95
+;#954
 
 
 
@@ -538,13 +538,38 @@
           (recur (remove found xs) (conj set (conj found f)))))
       set)))
 
-
-
-
-
 #(set (map set
-      (remove (comp zero? dec  count)
-              (vals (group-by frequencies %)
-                    ;(group-by sort  ["meat" "mat" "team" "mate" "eat"])
-                    ))))
+           (remove (comp zero? dec  count)
+                   (vals (group-by frequencies %)
+                                        ;(group-by sort  ["meat" "mat" "team" "mate" "eat"])
+                         ))))
+
+;; 80 Perfect numbers
+
+
+(fn [n]
+  (= (apply + (filter #(zero? (mod n %)) (range 1 n))) n))
+
+(fn reductions-
+  ([f [x & xs]] (reductions- f x xs))
+  ([f val [x & xs :as s]]
+   (cons val (when x
+               (let [new-val (f val x)]
+                 (lazy-seq (reductions- f new-val xs)))))))
+
+
+
+(defn reductions-
+  ([f [x & xs]] (reductions- f x xs))
+  ([f val [x & xs :as s]]
+   (lazy-cat [val]
+             (if x
+               (let [new-val (f val x)]
+                 (lazy-seq (reductions- f new-val xs)))))))
+
+
+
+;(reductions- conj [1] [2 3 4])
+
+
 
