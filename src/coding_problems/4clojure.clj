@@ -649,7 +649,19 @@
                       (not-any? zero?)))]
     (->> (range 2 (inc x))
          (filter (every-pred prime? #(zero? (rem x %))))
-         (map #(- 1 (/ %)))
-         (apply *)
+         (clojure.walk/walk #(- 1 (/ %)) #(apply * %))
          (* x)
          int)))
+
+;(totient 10)
+
+
+
+
+
+;# 86 Happy Numbers
+
+
+
+
+
