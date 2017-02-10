@@ -573,17 +573,17 @@
 
 ; #69 Merge with a function 
 
-(fn merge-with- [f & maps]
+(defn merge-with- [f & maps]
   (reduce (fn [map m] (reduce-kv (fn [map k v]
                                   (assoc map k
                                          (if-let [ov (get map k)]
                                            (f ov v)
                                            v))) map m))
-          (first maps) (rest maps)))
+          maps))
 
 
 
-(fn mw [f m & [h & r]]
+(defn mw [f m & [h & r]]
   (if h
     (recur f
            (reduce (fn [a [k v]] (assoc a k (if-let [av (a k)] (f av v) v))) m h)
@@ -591,8 +591,33 @@
     m))
 
 
-;(mw - {1 10, 2 20} {1 3, 2 10, 3 15})
 
 
+;(merge-with2 - false {:k 3} {:k 1})
 
+
+(defn merge-with2
+  [f & maps]
+  (when (some identity maps)
+    (let [merge-entry (fn [m e]
+			(let [k (key e) v (val e)]
+			  (if (contains? m k)
+			    (assoc m k (f (get m k) v))
+			    (assoc m k v))))
+          merge2 (fn [m1 m2]
+		   (reduce merge-entry m1 (seq m2)))]
+      (reduce merge2 maps))))
+
+;# 102 intoCamelCase
+
+(fn [s]
+  (let [[x & ss] (clojure.string/split s #"-")]
+    (apply str x (map clojure.string/capitalize ss))))
+
+
+(fn [s]
+  (->> s
+       (re-seq #"\w+")
+       (map-indexed #(if (zero? %1) %2 (clojure.string/capitalize %2)))
+       (apply str)))
 
