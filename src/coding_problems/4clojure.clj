@@ -568,8 +568,31 @@
                  (lazy-seq (reductions- f new-val xs)))))))
 
 
-
 ;(reductions- conj [1] [2 3 4])
+
+
+; #69 Merge with a function 
+
+(fn merge-with- [f & maps]
+  (reduce (fn [map m] (reduce-kv (fn [map k v]
+                                  (assoc map k
+                                         (if-let [ov (get map k)]
+                                           (f ov v)
+                                           v))) map m))
+          (first maps) (rest maps)))
+
+
+
+(fn mw [f m & [h & r]]
+  (if h
+    (recur f
+           (reduce (fn [a [k v]] (assoc a k (if-let [av (a k)] (f av v) v))) m h)
+           r)
+    m))
+
+
+;(mw - {1 10, 2 20} {1 3, 2 10, 3 15})
+
 
 
 
