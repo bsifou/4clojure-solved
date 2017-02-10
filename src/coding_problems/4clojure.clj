@@ -621,3 +621,35 @@
        (map-indexed #(if (zero? %1) %2 (clojure.string/capitalize %2)))
        (apply str)))
 
+; #75 Eurer's Totient Function
+
+(fn et [n]
+  (letfn [(gcd [a b]
+            (if (zero? b)
+              a
+              (gcd b (mod a b))))
+
+          (co-p? [a b]
+            (= (gcd a b) 1))]
+    (if (= n 1)
+      1
+      (count (filter (partial co-p? n) (range 1 n))))))
+
+
+(fn [n]
+  (if (= n 1) 1
+      (let [gcd (fn f [a b] (if (zero? b) a (f b (mod a b))))]
+        (count (filter #(= 1 (gcd n %)) (range 1 n))))))
+
+
+(defn totient [x]
+  (let [prime? (fn [x]
+                 (->> (range 2 x)
+                      (map #(rem x %))
+                      (not-any? zero?)))]
+    (->> (range 2 (inc x))
+         (filter (every-pred prime? #(zero? (rem x %))))
+         (map #(- 1 (/ %)))
+         (apply *)
+         (* x)
+         int)))
