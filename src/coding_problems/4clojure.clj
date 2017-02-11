@@ -702,8 +702,7 @@
                            :else [(conj s x) next]))) [[] n])))))
 
 
-(fn [n]
-(= 1 (nth (iterate (fn [n] (->> (str n) (map #(Character/digit % 10)) 
+;(= 1 (nth (iterate (fn [n] (->> (str n) (map #(Character/digit % 10)) 
 
 
 (defn happy3? [n]
@@ -759,5 +758,34 @@
         m (quot (count s) 2)
         ds #(apply + (map (comp read-string str) (take m %)))]
     (= (ds s) (ds (reverse s)))))
+
+
+;; 85 power set
+
+
+(fn powerset [xset]
+  (if (empty? xset)
+    #{#{}}
+    (let [xcompl (disj xset (first xset))
+          powcompl (powerset xcompl)
+          xadded (map #(conj % (first xset)) powcompl)]
+      (clojure.set/union powcompl xadded))))
+
+
+(fn powerset [xset]
+  (if (empty? xset)
+    #{#{}}
+    (as->
+        (disj xset (first xset)) s
+        (powerset s)
+        (clojure.set/union s (map #(conj % (first xset)) s)))))
+
+
+
+#(reduce
+  (fn [a x] (into a (map #(conj % x) a)))
+  #{#{}} %)
+
+
 
 
