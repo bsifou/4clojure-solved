@@ -656,12 +656,63 @@
 ;(totient 10)
 
 
-
-
-
 ;# 86 Happy Numbers
 
 
+;; (reduce-kv (fn [r k v]
+;;              (if (= 1 k)
+;;                (assoc r k (inc v))
+;;                ;(conj r v)
+;;                (assoc r k v)))
+;;            []
+;;            [0 0 2 3])
+
+(-> [10 11]
+    (conj 12)
+    ;(as-> xs (map - xs [3 2 1]))
+    )
+
+;(use 'clojure.data)
+
+; 86 Happy numbers 
+
+;(* 7 7) -> 49 -> (+ (* 4 4) (* 9 9)) -> 97 (+ (* 9 9) (* 7 7)) -> 130 (+ 1 9 ) 10 -> 1
 
 
+; dotimes, iterate, reduced
+
+(fn happy? [n]
+  (let [sum-sqr (fn sum-sqr [n]
+                  (apply + (map (comp #(* % %) read-string  str) (str n))))
+        limit 1000]
+    (= (last (take limit (iterate (fn [x] (sum-sqr x)) n))) 1)))
+
+
+(defn happy2? [n]
+  (let [sum-sqr (fn sum-sqr [n]
+                  (apply + (map (comp #(* % %) read-string  str) (str n))))]
+    (first (drop-while
+            ;vector?
+            (complement (some-fn true? false?))
+            (iterate (fn [[s x]]
+                       (let [next (sum-sqr x)]
+                         (cond 
+                           (= x 1) true
+                           (some (partial = x) s) false
+                           :else [(conj s x) next]))) [[] n])))))
+
+
+(fn [n]
+(= 1 (nth (iterate (fn [n] (->> (str n) (map #(Character/digit % 10)) 
+
+
+(defn happy3? [n]
+  (letfn [(sum-sqr [n]
+            (apply + (map (comp #(* % %) read-string  str) (str n))))]
+      (loop [seen #{}
+             x n]
+        (cond
+          (seen x) false
+          (= x 1) true
+          :else (recur (conj set x) (sum-sqr x))))))
 
