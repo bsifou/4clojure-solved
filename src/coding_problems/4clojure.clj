@@ -716,3 +716,46 @@
           (= x 1) true
           :else (recur (conj set x) (sum-sqr x))))))
 
+;78 reimplement trampline
+
+(fn tramp [f & args]
+  (let [r (apply f args)]
+   (if (fn? r)
+     (recur r nil)
+     r)))
+
+
+(fn tramp2 [f & args]
+  (loop [g (apply f args)]
+    (if (fn? g) (recur (g)) g)))
+
+(fn tramp3
+  ([f]
+   (let [ret (f)]
+     (if (fn? ret)
+       (recur ret)
+       ret)))
+  ([f & args]
+   (trampoline #(apply f args))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
