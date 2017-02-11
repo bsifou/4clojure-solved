@@ -739,23 +739,25 @@
    (trampoline #(apply f args))))
 
 
+;; spped of sound 
 
 
+;; The balance of N 115
 
+(->> n
+    (str)
+    (split-at ))
 
+(fn [coll]
+  (let  [ds ((comp (partial map (comp read-string str)) str) coll)
+        c (count ds)
+        [r l]  (split-at (/ c 2) ds)]
+     (= (apply + r) (apply + (if (odd? c) (last r) 0) l))))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+(fn [n]
+  (let [s (str n)
+        m (quot (count s) 2)
+        ds #(apply + (map (comp read-string str) (take m %)))]
+    (= (ds s) (ds (reverse s)))))
 
 
