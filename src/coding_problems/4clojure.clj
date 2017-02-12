@@ -911,10 +911,30 @@
   (reductions #(%2 %1) x (cycle fs)))
 
 
+; #110 Sequence of pronunciation
+
+(fn pron [i]
+  (next (iterate (fn [x] (->> x
+                             (partition-by identity)
+                             (mapcat frequencies)
+                             (mapcat reverse))) i)))
 
 
 
 
+ 
 
+(defn pron [x]
+  ((comp next
+         (partial iterate
+                  (comp (partial mapcat (juxt count first))
+                        (partial partition-by identity)))) x))
 
+(fn pron [xs]
+  (next
+   (iterate
+    #(mapcat
+      (juxt count first)
+      (partition-by identity %))
+    xs)))
 
