@@ -2,7 +2,7 @@
   (:gen-class)
   (:require [clojure.core.match :refer [match]])
   (:require [defun.core :refer [defun]])
- (:require [functions-as-patterns.core  :refer :all]))o
+ (:require [functions-as-patterns.core  :refer :all]))
 
 ;#954
 
@@ -806,17 +806,54 @@
        (map set)
        (set)))
 
+(let [f (fn [x] (* x x))]
+    (partition-by  #(= (f 1) (f %)) [-1 -2 1 2 3 4 5]))
+
+;; 105 Idenitty keys and values 
+
+
+;; juxt?
+
+
+(fn transf [coll]
+  (let [s (partition-all 2 (partition-by keyword? coll))
+        f1 #(map (fn [[[& keys] vals]]
+                   [(last keys)  (vec vals)])
+                 %)
+        f2 #(keep (fn [[[& keys] _]]
+                    (if-let [ks (butlast keys)]
+                      (map (fn [k] [k []]) ks)))
+                  %)]
+    (->> ((juxt f1 (comp first f2)) s)
+        (apply concat)
+        (into {} ))))
+
+
+;(partition-all 2 (partition-by keyword? [:a 1 2 3 :b :c 4]))
+
+
+(defn transf [s]
+  (apply array-map
+         (mapcat (fn [[k :as e]]
+                   (if (keyword? k)
+                     (interpose [] e)
+                     [e]))
+                 (partition-by keyword? s))))
+
+
+(defn transf [v]
+  (first (reduce (fn [[res last] v]
+                   (if (number? v)
+                     [(update res last conj v) last]
+                     [(assoc res v []) v]))
+                 [{} nil] v)))
 
 
 
 
 
 
-
-
-
-
-
+(transf [:a 1 2 3 :b :c 4])
 
 
 
