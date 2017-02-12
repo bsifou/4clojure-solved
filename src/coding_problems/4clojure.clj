@@ -938,3 +938,10 @@
       (partition-by identity %))
     xs)))
 
+; #158 Decurry
+
+(fn decur [f] 
+  (fn [& args]
+    (reduce (fn [r x] (r x)) f args)))
+
+
