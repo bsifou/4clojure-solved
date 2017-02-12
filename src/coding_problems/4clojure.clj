@@ -850,10 +850,51 @@
 
 
 
+;; Digits and bases #137
+
+(rem 9 2) -> 1
+
+(quot 9 2) -> 4
+
+(rem 4 2) -> 0
+(quot 4 2) -> 2
+
+(rem 2 2) -> 0
+(quot 2 2) -> 1
+
+(rem 1 2) -> 1
+(quot 1 2)  -> 0
+
+(rem 0 2) -> 0
+(quot 0 2) -> 0
+
+(fn f [n b]
+  (if (zero? n)
+    [0]
+    (loop [n n
+           r []]
+      (if (zero? n)
+        (vec r)
+        (recur (quot n b) (cons r (rem n b)))))))
+      
+
+(fn [n b]
+  (loop [a () q n]
+    (if (zero? q)
+      (if (empty? a) '(0) a)
+      (recur (cons (mod q b) a) (quot q b)))))
 
 
+(fn [x b]
+  (if (zero? x)
+    [x]
+    ((fn r [x]
+       (if (zero? x)
+         []
+         (conj (r (quot x b)) (mod x b))))
+     x)))
 
-(transf [:a 1 2 3 :b :c 4])
+
 
 
 
