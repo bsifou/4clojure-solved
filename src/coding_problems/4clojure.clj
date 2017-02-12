@@ -786,6 +786,39 @@
   (fn [a x] (into a (map #(conj % x) a)))
   #{#{}} %)
 
+;; 98 Equivalence classes
+
+
+;; maybe use reduce?
+
+(fn  [f xset]
+  (reduce (fn [r x]
+            (conj  r
+                   (set (filter  #(= (f x) (f %)) (apply disj xset r)))))
+          #{}
+          xset))
+
+
+(defn ec2 [f xset]
+  (->> xset
+       (group-by f)
+       (vals)
+       (map set)
+       (set)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
