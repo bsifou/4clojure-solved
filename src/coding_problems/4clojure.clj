@@ -895,6 +895,24 @@
      x)))
 
 
+; #144  Oscilrate
+
+
+(fn appl [x & fs]
+  (let [cycle-fs (cycle fs)
+        lappl (fn lappl [x [f & fs]]
+                (let [val (f x)]
+                  (cons val (lazy-seq (lappl val fs)))))]
+    (cons x (lappl x cycle-fs))))
+
+
+
+(fn [x & fs]
+  (reductions #(%2 %1) x (cycle fs)))
+
+
+
+
 
 
 
