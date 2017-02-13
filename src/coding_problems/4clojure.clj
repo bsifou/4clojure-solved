@@ -944,4 +944,39 @@
   (fn [& args]
     (reduce (fn [r x] (r x)) f args)))
 
+;; Lazy Searching #108
+
+
+(defn ls [& seqs]
+  (reduce (first seqs)))
+
+
+(fn ls [& ss]
+  (first
+   (drop-while
+    (fn [xs]
+      (apply not= xs (map
+                      (fn [s]
+                        (some (fn [x] (when (>= x xs) x)) s))
+                      (rest ss))))
+    (first ss))))
+
+
+(defn ls [xs & yss]
+  (letfn [(d [m ss] (map (partial drop-while #(< % m)) ss))]
+    (loop [[h & r] xs ss (d h yss)]
+      (if (apply = h (map first ss))
+        h
+        (recur r (d (first r) ss))))))
+
+
+
+(defn ls [xs & yss]
+  (letfn [(d [m ss] (map (partial drop-while #(< % m)) ss))]
+
+    (reduce  (fn [h x] (if (apply = h (map first (d h yss)))
+                        (reduced h)  x)) xs)))
+
+
+
 
