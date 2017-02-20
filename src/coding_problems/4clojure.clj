@@ -31,7 +31,7 @@
            (bt? (nth t 2)))))
 
 
-;# 120 
+;# 120
 
 ((fn [s] (->> s
              (map #(re-seq #"\d" (str %)))
@@ -49,10 +49,10 @@
                             (str x)))))))
 
 ;; (fn func [aNumColl]
-;;   (count (partial (filter (fn [x] (< x (reduce 
+;;   (count (partial (filter (fn [x] (< x (reduce
 ;;                                        (fn [aSSaum aCNum]
 ;;                                          (let [v (float (- (int aCNum) 48))]
-;;                                            (+ aSSum (* v v)))) 
+;;                                            (+ aSSum (* v v))))
 ;;                                        0 (str x))))))))
 
 
@@ -115,7 +115,7 @@
 
 (defn pas
   [xs]
-  (iterate (fn [xs] (vec (map +' (cons 0 xs) (conj xs 0)))) xs)) 
+  (iterate (fn [xs] (vec (map +' (cons 0 xs) (conj xs 0)))) xs))
 
 
 (fn [x]
@@ -126,7 +126,7 @@
            x))
 
 
-; #96  Beauty is Symmetry 
+; #96  Beauty is Symmetry
 
 
 (fn sym?  [node]
@@ -194,7 +194,7 @@
 
 
 
-; #43 Reverse Interleave 
+; #43 Reverse Interleave
 
 (fn  rev-interleave [coll n]
   (loop [c n
@@ -210,7 +210,7 @@
                res)))))
 
 
- 
+
 
 #(apply map list (partition %2 %))
 
@@ -220,7 +220,7 @@
                     (cons (conj (last s) val) (butlast s)))]
     (reverse (reduce shift-add (repeat n []) s))))
 
-;; every function tells us a story :) 
+;; every function tells us a story :)
 
 
 ; #50 split by type
@@ -250,7 +250,7 @@
   (loop [left s
          bag #{}
          res (list)]
-    (if-not left 
+    (if-not left
       (reverse res)
       (let [[x & xs] left]
         (if (bag x)
@@ -319,7 +319,7 @@
   (fn [& args]
     (reduce #(conj %1 (apply %2 args)) [] fns)))
 
-;# 
+;#
 
 
 
@@ -328,7 +328,7 @@
   (let [s (map vector (range 2 (inc n)) (vec (repeat (dec n) true)))]
     (->> (loop [[[i b] & xs] s
                 r s]
-           (if (and xs (<= i (Math/sqrt n))) 
+           (if (and xs (<= i (Math/sqrt n)))
              (recur
               xs
               (if b
@@ -346,7 +346,7 @@
          (map first))))
 
 ;; :TODO: make github gist for my implementation of the seive algorithm
-;; and check other implemntation pereferbably form kohyama! 
+;; and check other implemntation pereferbably form kohyama!
 
 ; usin core async! https://github.com/clojure/core.async/wiki/Sieve-of-Eratosthenes
 
@@ -399,7 +399,7 @@
             (aset refs j false)))
         (filter #(aget refs %) (range 2 lim)))))
 
-;todo 
+;todo
 (defn primes-to
   "Returns a lazy sequence of prime numbers less than lim"
   [lim]
@@ -437,7 +437,7 @@
   (cond
     (= s (into #{} s)) :set
     (and (associative? s)
-         (not= (count (flatten (assoc s 0 1))) (count (assoc s 0 1)))) :map 
+         (not= (count (flatten (assoc s 0 1))) (count (assoc s 0 1)))) :map
     (and (= s (into [] s))
          (associative? s)
          (= (last (conj s 'spc)) 'spc)) :vector
@@ -464,14 +464,14 @@
           :vector
           :default :list)))
 
-;#74 filter perfect squares 
+;#74 filter perfect squares
 
 ((fn [s]
-   (apply str (interpose "," 
+   (apply str (interpose ","
                          (map str (filter (fn [x] (let [root-i (int (Math/sqrt x))]
                                                    (== (* root-i root-i) x)))))))) )
 
-((fn [s] (->> 
+((fn [s] (->>
          (clojure.string/split s  #",")
          (map read-string)
           (filter (fn [x] (let [root-i (int (Math/sqrt x))]
@@ -509,7 +509,7 @@
 ;; :f
 
 
-; # 76 Intro to Trampline 
+; # 76 Intro to Trampline
 
 
 (= [1 3 5 7 9 11]
@@ -528,7 +528,7 @@
          set #{}]
     (if f
       (let [found (reduce (fn [r x] (if (and
-                                        
+
                                         ;(every? #(clojure.string/includes? f (str %)) x)
                                         (= (frequencies x) (frequencies f)))
                                      (conj r x)
@@ -571,7 +571,7 @@
 ;(reductions- conj [1] [2 3 4])
 
 
-; #69 Merge with a function 
+; #69 Merge with a function
 
 (defn merge-with- [f & maps]
   (reduce (fn [map m] (reduce-kv (fn [map k v]
@@ -674,7 +674,7 @@
 
 ;(use 'clojure.data)
 
-; 86 Happy numbers 
+; 86 Happy numbers
 
 ;(* 7 7) -> 49 -> (+ (* 4 4) (* 9 9)) -> 97 (+ (* 9 9) (* 7 7)) -> 130 (+ 1 9 ) 10 -> 1
 
@@ -696,13 +696,13 @@
             (complement (some-fn true? false?))
             (iterate (fn [[s x]]
                        (let [next (sum-sqr x)]
-                         (cond 
+                         (cond
                            (= x 1) true
                            (some (partial = x) s) false
                            :else [(conj s x) next]))) [[] n])))))
 
 
-;(= 1 (nth (iterate (fn [n] (->> (str n) (map #(Character/digit % 10)) 
+;(= 1 (nth (iterate (fn [n] (->> (str n) (map #(Character/digit % 10))
 
 
 (defn happy3? [n]
@@ -738,7 +738,7 @@
    (trampoline #(apply f args))))
 
 
-;; spped of sound 
+;; spped of sound
 
 
 ;; The balance of N 115
@@ -809,7 +809,7 @@
 (let [f (fn [x] (* x x))]
     (partition-by  #(= (f 1) (f %)) [-1 -2 1 2 3 4 5]))
 
-;; 105 Idenitty keys and values 
+;; 105 Idenitty keys and values
 
 
 ;; juxt?
@@ -876,7 +876,7 @@
       (if (zero? n)
         (vec r)
         (recur (quot n b) (cons r (rem n b)))))))
-      
+
 
 (fn [n b]
   (loop [a () q n]
@@ -922,7 +922,7 @@
 
 
 
- 
+
 
 (defn pron [x]
   ((comp next
@@ -940,7 +940,7 @@
 
 ; #158 Decurry
 
-(fn decur [f] 
+(fn decur [f]
   (fn [& args]
     (reduce (fn [r x] (r x)) f args)))
 
@@ -979,4 +979,45 @@
 
 
 
+
+; #93 Partially flatten a sequence
+
+
+(fn flat [s]
+  (filter #(and (coll? %) (not (coll? (first %))))
+          (tree-seq coll? identity s)))
+
+(fn pf [coll]
+  (mapcat
+    #(if (coll? (first %))
+         (pf %)
+         (list %))
+    coll))
+
+(defn pf [coll]
+  (mapcat
+    #(if (coll? (first %))init
+         (pf  %)
+         (list %))
+    coll))
+
+(= (pf [["Do"] ["Nothing"]])
+   [["Do"] ["Nothing"]])
+
+(= (pf [[[[:a :b]]] [[:c :d]] [:e :f]])
+   [[:a :b] [:c :d] [:e :f]])
+
+(= (pf '((1 2)((3 4)((((5 6)))))))
+   '((1 2)(3 4)(5 6)))
+
+;; TODO: uderstand prewalk/ postwalk
+
+;; #3 intro to strings
+
+(.toUpperCase "hello world")
+
+
+;# 57 Simple Recursion
+
+(= '(5 4 3 2 1) ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5))
 
