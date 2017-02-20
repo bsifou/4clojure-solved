@@ -1021,3 +1021,44 @@
 
 (= '(5 4 3 2 1) ((fn foo [x] (when (> x 0) (conj (foo (dec x)) x))) 5))
 
+
+;#68 recuring theme
+
+(= [7 6 5 4 3]
+   (loop [x 5
+          result []]
+     (if (> x 0)
+       (recur (dec x) (conj result (+ 2 x)))
+       result)))
+
+;# 71
+
+(= (last (sort (rest (reverse [2 5 4 1 3 6]))))
+   (-> [2 5 4 1 3 6] (reverse) (rest) (sort) (last))
+   5)
+;# 72
+
+(= (apply +  (map inc (take 3 (drop 2 [2 5 4 1 3 6]))))
+   (->> [2 5 4 1 3 6] (drop 2) (take 3) (map inc) (apply +))
+   11)
+
+; #145
+
+(take-while (partial > 40) (iterate (partial + 4) 1))
+
+(1 5 9 13 17 21 25 29 33 37)
+
+
+(for [x (range 40)
+      :when (= (rem x 4) 1)]
+  x)
+
+(for [x (iterate #(+ 4 %) 0)
+      :let [y (inc x)]
+      :while (< y 40)]
+  y)
+
+(for [[x y] (partition 2 (range 20))]
+  (+ x y))
+
+
