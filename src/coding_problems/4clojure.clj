@@ -8,7 +8,6 @@
 
 
 
-
 (fn [root]
     (every?
       #(or
@@ -30,9 +29,7 @@
            (bt? (nth t 1))
            (bt? (nth t 2)))))
 
-
 ;# 120
-
 ((fn [s] (->> s
              (map #(re-seq #"\d" (str %)))
              (map #(map read-string %))
@@ -76,10 +73,9 @@
 
 #(iterate (partial + %) %)
 
-((fn [& xs] (first (apply clojure.set/intersection
-                         (map (fn [x] (apply sorted-set (take 500 (iterate (partial + x) x))))
-                              xs)))))
-
+;; ((fn [& xs] (first (apply clojure.set/intersection
+;;                          (map (fn [x] (apply sorted-set (take 500 (iterate (partial + x) x))))
+;;                               xs)))))
 
 
 (fn [x & xs]
@@ -89,14 +85,13 @@
       (iterate #(+ x %) x))))
 
 
-
 (fn lcm [& args]
   (letfn [(gcd [a b]
             (if (zero? b)
               a
               (gcd b (mod a b))))]
     (reduce #(/ (* % %2) (gcd % %2)) args)))
-
+(if if if )
 
 
 ; #173 Intro to destructuring 2 :TODO:
@@ -114,7 +109,7 @@
 
 
 (defn pas
-  [xs]
+ [xs]
   (iterate (fn [xs] (vec (map +' (cons 0 xs) (conj xs 0)))) xs))
 
 
@@ -141,6 +136,8 @@
           (nth node 2)))))
 
 
+
+
 (fn [[v l r]]
   (= l
      ((fn mirror [[v l r :as t]]
@@ -155,7 +152,6 @@
                          (check al br)
                          (check ar bl)))
                   (= a b))) l r))
-
 
 ; #146 Trees into tables
 
@@ -229,7 +225,6 @@
 (#(set (vals (group-by type %))) [1 :a 2 :b 3 :c])
 
 ; #55 Count Occurrences
-
 
 ((fn [s]
    (reduce (fn [m x]
@@ -400,6 +395,7 @@
         (filter #(aget refs %) (range 2 lim)))))
 
 ;todo
+
 (defn primes-to
   "Returns a lazy sequence of prime numbers less than lim"
   [lim]
@@ -557,8 +553,6 @@
                (let [new-val (f val x)]
                  (lazy-seq (reductions- f new-val xs)))))))
 
-
-
 (defn reductions-
   ([f [x & xs]] (reductions- f x xs))
   ([f val [x & xs :as s]]
@@ -589,12 +583,6 @@
            (reduce (fn [a [k v]] (assoc a k (if-let [av (a k)] (f av v) v))) m h)
            r)
     m))
-
-
-
-
-;(merge-with2 - false {:k 3} {:k 1})
-
 
 (defn merge-with2
   [f & maps]
@@ -738,6 +726,7 @@
    (trampoline #(apply f args))))
 
 
+
 ;; spped of sound
 
 
@@ -787,7 +776,6 @@
   #{#{}} %)
 
 ;; 98 Equivalence classes
-
 
 ;; maybe use reduce?
 
@@ -885,6 +873,8 @@
       (recur (cons (mod q b) a) (quot q b)))))
 
 
+
+
 (fn [x b]
   (if (zero? x)
     [x]
@@ -919,16 +909,11 @@
                              (mapcat frequencies)
                              (mapcat reverse))) i)))
 
-
-
-
-
-
 (defn pron [x]
   ((comp next
          (partial iterate
                   (comp (partial mapcat (juxt count first))
-                        (partial partition-by identity)))) x))
+                        (partial partition-by identity))))))
 
 (fn pron [xs]
   (next
@@ -987,12 +972,15 @@
   (filter #(and (coll? %) (not (coll? (first %))))
           (tree-seq coll? identity s)))
 
+
+
 (fn pf [coll]
   (mapcat
-    #(if (coll? (first %))
-         (pf %)
-         (list %))
-    coll))
+   #(if (coll? (first %))
+      (pf %)
+      (list %))
+   coll))
+
 
 (defn pf [coll]
   (mapcat
@@ -1031,6 +1019,8 @@
        (recur (dec x) (conj result (+ 2 x)))
        result)))
 
+
+
 ;# 71
 
 (= (last (sort (rest (reverse [2 5 4 1 3 6]))))
@@ -1062,3 +1052,15 @@
   (+ x y))
 
 
+; 195 
+
+(defn parentheses 
+  ([n] (set (parentheses "" n n)))
+  ([s open close]
+   (if (and (zero? open) (zero? close)) 
+     [s]
+     (lazy-cat
+      (when (> open 0)
+        (parentheses (str s "(") (dec open) close))
+      (when (> close open)
+        (parentheses (str s ")") open (dec close)))))))
