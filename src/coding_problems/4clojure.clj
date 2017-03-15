@@ -2,10 +2,9 @@
   (:gen-class)
   (:require [clojure.core.match :refer [match]])
   (:require [defun.core :refer [defun]])
- (:require [functions-as-patterns.core  :refer :all]))
+  (:require [functions-as-patterns.core  :refer :all]))
 
 ;#954
-
 
 
 (fn [root]
@@ -206,8 +205,6 @@
                res)))))
 
 
-
-
 #(apply map list (partition %2 %))
 
 
@@ -317,7 +314,6 @@
 ;#
 
 
-
 (defn seive
   [n]
   (let [s (map vector (range 2 (inc n)) (vec (repeat (dec n) true)))]
@@ -395,6 +391,7 @@
         (filter #(aget refs %) (range 2 lim)))))
 
 ;todo
+
 
 (defn primes-to
   "Returns a lazy sequence of prime numbers less than lim"
@@ -786,7 +783,6 @@
           #{}
           xset))
 
-
 (defn ec2 [f xset]
   (->> xset
        (group-by f)
@@ -955,7 +951,6 @@
         (recur r (d (first r) ss))))))
 
 
-
 (defn ls [xs & yss]
   (letfn [(d [m ss] (map (partial drop-while #(< % m)) ss))]
 
@@ -972,8 +967,6 @@
   (filter #(and (coll? %) (not (coll? (first %))))
           (tree-seq coll? identity s)))
 
-
-
 (fn pf [coll]
   (mapcat
    #(if (coll? (first %))
@@ -984,7 +977,7 @@
 
 (defn pf [coll]
   (mapcat
-    #(if (coll? (first %))init
+    #(if (coll? (first %)) 
          (pf  %)
          (list %))
     coll))
@@ -1064,3 +1057,45 @@
         (parentheses (str s "(") (dec open) close))
       (when (> close open)
         (parentheses (str s ")") open (dec close)))))))
+
+
+
+;; 114
+(defn my-take-while
+  [n p s]
+  (loop [n n
+         r []
+         [h & t] s]
+    (if (and h (pos? n))
+      (recur
+       (if (p h)
+         (dec n)
+         n)
+       (conj r h)
+       t)
+      (bullast r))))
+
+
+(defn my-take-while
+  [n p s]
+  (if (and (seq s) (p (first s)) (> n 1))
+    (lazy-seq (cons (first s)
+                    (my-take-while (dec n)
+                                   p
+                                   (rest s))))))
+
+
+
+(= ["this" "is" "a" "sentence"]
+   (my-take-while 3 #(some #{\i} %)
+         ["this" "is" "a" "sentence" "i" "wrote"]))
+
+
+
+
+(= [2 3 5 7 11 13]
+   (my-take-while 4 #(= 2 (mod % 3))
+         [2 3 5 7 11 13 17 19 23]))
+
+
+
