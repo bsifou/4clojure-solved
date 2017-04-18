@@ -1101,6 +1101,13 @@
 
 #(sort-by clojure.string/lower-case (clojure.string/split (apply str (butlast  %)) #" "))
 
+;; 132
 
-
+(fn [pred val coll]
+  (->> coll
+       (partition-all 2 1)
+       (mapcat (fn [[x1 x2]]
+                 (if (and x2 (pred x1 x2))
+                   [x1 val]
+                   [x1])))))
 
