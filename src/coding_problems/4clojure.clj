@@ -1097,5 +1097,10 @@
    (my-take-while 4 #(= 2 (mod % 3))
          [2 3 5 7 11 13 17 19 23]))
 
+;; 70 word sorting
+
+#(sort-by clojure.string/lower-case (clojure.string/split (apply str (butlast  %)) #" "))
+
+
 
 
