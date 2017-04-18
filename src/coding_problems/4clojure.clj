@@ -1080,7 +1080,7 @@
   [n p s]
   (if (and (seq s) (p (first s)) (> n 1))
     (lazy-seq (cons (first s)
-                    (my-take-while (dec n)
+                    (my-take-while ()
                                    p
                                    (rest s))))))
 
