@@ -1111,3 +1111,45 @@
                    [x1 val]
                    [x1])))))
 
+
+;; an alternative 
+(fn ib [p k [h & [s :as r]]]
+  (if (nil? h) ()
+      (#(if (and (not (nil? s)) (p h s))
+          (cons h (cons k %))
+          (cons h %))
+       (lazy-seq (ib p k r)))))
+
+
+
+;; # 104
+
+
+
+(def test-num 48)
+
+((fn rom [x]
+   (let [m {1 "I"
+            5 "V"
+            4 "IV"
+            9 "IX"
+            10 "X"
+            40 "XL"
+            50 "L"
+            90 "XC"
+            100 "C"
+            400 "CD"
+            500 "D"
+            900 "CM"
+            1000 "M"}
+         closest-n (fn [n] (-> (split-with #(<= % n) (sort (keys m))) first last))
+         closest-n-repeated (juxt (fn [x] (quot x (closest-n x))) closest-n (fn [x] (rem x (closest-n x))))
+         romanize (fn [[times n]] (apply str (repeat times (m n))))]
+                                        ;(closest-n-repeated 50)
+     (->> (closest-n-repeated x)
+          (iterate (fn [[_ _ next :as pair]]  (if (pos? next) (closest-n-repeated next) [-1 -1 -1])))
+          (take-while (fn [[_ _ next]] (>= next 0)))
+          (map butlast)
+          (map romanize)
+          (apply str)))) test-num)
+
