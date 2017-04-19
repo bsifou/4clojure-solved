@@ -1153,3 +1153,17 @@
           (map romanize)
           (apply str)))) test-num)
 
+;; an alternative 
+
+(fn [n]
+  (loop [a () q n [i v x :as r] '(\I \V \X \L \C \D \M)]
+    (if (zero? q)
+      (apply str a)
+      (let [m (mod q 10)]
+        (recur 
+         ((comp #(if (= 4 (mod  m 5)) (cons i %) %)
+                #(if (< 3 (mod  m 9)) (cons v %) %)
+                #(if (< 0 (quot m 9)) (cons x %) %))
+          (reduce conj a (repeat (mod (mod m 5) 4) i)))
+         (quot q 10)
+         (nthnext r 2))))))
