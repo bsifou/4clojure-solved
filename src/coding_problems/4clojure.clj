@@ -1170,7 +1170,7 @@
 
 ;; 103
 
-
+;; homogenous implementation, each iter we have the same kind of elements (all)  
 (fn k-comb [n input-v]
   (set (filter
         #(= (count %) n)
@@ -1184,11 +1184,30 @@
                     result)
                    (dec n)))))))
 
+;; alternative, bottom -> up, each time we introduce new different element to our population  
+
+(fn k-comb [n input-v]
+  (set (filter
+        #(= (count %) n)
+        (reduce
+         (fn [r x]
+           (mapcat #(conj % x) r))
+         #{#{}}
+         input-v))))
 
 
 
 
 
+
+
+(fn [n s]
+  (set
+   (filter #(= n (count %))
+           (reduce
+            (fn [a x] (into a (map #(conj % x) a)))
+            #{#{}}
+            s))))
 
 
 
