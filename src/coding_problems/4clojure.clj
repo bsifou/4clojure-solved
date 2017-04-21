@@ -1201,21 +1201,6 @@
 
 
 
-(fn [n s]
-  (set
-   (filter #(= n (count %))
-           (reduce
-            (fn [a x] (into a (map #(conj % x) a)))
-            #{#{}}
-            s))))
-
-
-
-
-
-
-
-
 
 
 
