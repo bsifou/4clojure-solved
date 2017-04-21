@@ -1167,3 +1167,41 @@
           (reduce conj a (repeat (mod (mod m 5) 4) i)))
          (quot q 10)
          (nthnext r 2))))))
+
+;; 103
+
+
+(fn k-comb [n input-v]
+  (set (filter
+        #(= (count %) n)
+        (loop [result (map #(hash-set %) input-v) n n]
+          (if (= 1 n)
+            result
+            (recur (mapcat
+                    (fn [x]
+                      (map #(conj x %) input-v))
+
+                    result)
+                   (dec n)))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
