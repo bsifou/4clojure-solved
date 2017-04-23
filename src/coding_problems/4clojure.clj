@@ -1175,7 +1175,7 @@
   (set (filter
         #(= (count %) n)
         (loop [result (map #(hash-set %) input-v) n n]
-          (if (= 1 n)
+          (if (= 1 n)b
             result
             (recur (mapcat
                     (fn [x]
@@ -1195,17 +1195,29 @@
          #{#{}}
          input-v))))
 
+;; 108 
+
+(defn infinite-matrix
+  ([f]
+   (infinite-matrix f 0 0))
+
+  ([f i j]
+   (let [irow (fn irow [i j]
+                (lazy-seq (cons (f i j) (irow  i (inc j)))))
+         icol (fn icol [i]
+                (lazy-seq
+                 (cons (irow i j)
+                       (icol (inc i)))))]
+     (icol i)))
+
+  ([f i j s t]
+   (take s (map #(take t %) (infinite-matrix f i j)))))
 
 
 
 
+;;(infinite-matrix * 3 5 5 7)
 
 
-
-
-
-
-
-
-
+;;(take 6 (map #(take 5 %) (infinite-matrix str 3 2)))
 
