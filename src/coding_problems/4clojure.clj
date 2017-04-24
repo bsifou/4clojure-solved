@@ -90,7 +90,7 @@
               a
               (gcd b (mod a b))))]
     (reduce #(/ (* % %2) (gcd % %2)) args)))
-(if if if )
+
 
 
 ; #173 Intro to destructuring 2 :TODO:
@@ -1224,23 +1224,27 @@
   (= (mod n 10)
      (quot n (count ))))
 
+;; 150 pal numbers 
+
 (defn
   pal-nums [n]
-  (let [count-n (fn [x]
+  (let [count-n_ (fn [x]
                   (loop [x x count 0]
                     (if (pos? x)
                       (recur (quot x 10) (inc count))
                       count)))
+        count-n (fn [x]
+                  (count (.toString x)))
 
         same-ends? (fn [x]
                      (= (mod x 10)
-                        (int (quot x (Math/pow 10 (dec (count-n x)))))))
+                        (quot x (apply * (repeat (dec (count-n x)) 10N)))))
 
         ;;count (count-n n)
 
         next-n (fn [x]
                  (let [q (quot x 10)]
-                   (int (mod q (Math/pow 10 (dec (count-n q)))))))
+                   (int (mod q (apply * (repeat (dec (count-n q)) 10N))))))
         
         palindrom? (fn [x]
                      (loop [x x]
@@ -1263,5 +1267,63 @@
     (filter palindrom?
             (iterate inc
                      n))))
+
+
+;; other implementations 
+
+
+(defn palindromic-num [num]
+  (letfn [(reverse-digit [num result]
+            (if (zero? (quot num 10))
+                (+ (mod num 10) (* result 10))
+                (reverse-digit (quot num 10)
+                               (+ (mod num 10) (* result 10)))))
+
+          (palindromic-in-i-digit [low up]
+            (lazy-cat
+             (lazy-cat
+              (map #(if (< % 10) % (reverse-digit (quot % 10) %)) (range low up))
+              (drop-while
+               zero?
+               (map #(reverse-digit % %) (range low up))))
+             (palindromic-in-i-digit up (* up 10))))]
+    (filter #(>= % num)
+            (let [len (count (.toString num))
+                  digit (quot len 2)
+                  low (quot num (apply * (repeat digit 10N)))
+                  up (apply * (repeat (count (.toString low)) 10N))]
+              (palindromic-in-i-digit low up)))))
+
+
+
+(fn [n]
+  (letfn [(log10 [n]
+            (loop [n n l 0]
+              (if (< n 10) l (recur (quot n 10) (inc l)))))
+                                        ; pal make palindromics for a given number of columns
+                                        ; for example (pal 5) returns (10001 10101 ... 99999)
+          (pal [c]
+            (if (= c 1) (range 10)
+                (let [
+                      hc  (quot c 2)                ; 2 in the example
+                      hc10 (apply * (repeat hc 10)) ; 100
+                      dhc10 (if (odd? c) hc10 (/ hc10 10)) ; 100
+                      s (max dhc10 (quot n hc10))
+                      ]
+                  (map
+                   (fn [u]                      ; for example 321
+                     (+ (* hc10 u)             ; 32100 + 23 = 32123
+                        (->> (reverse (str u)) ; (\1 \2 \3)
+                             (#(if (odd? c) (next %) %)) ; (\2 \3)
+                             (drop-while #(= \0 %))      ; (\2 \3)
+                             (apply str)                 ;   "23"
+                             (read-string))))            ;    23
+                   (range s (* 10 dhc10)))))) ; (range 10000 100000)
+          ]
+    (->> (inc (log10 n))
+         (iterate inc)
+         (map pal)
+         (apply concat)
+         (drop-while #(< % n)))))
 
 
