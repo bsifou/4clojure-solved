@@ -1214,10 +1214,54 @@
    (take s (map #(take t %) (infinite-matrix f i j)))))
 
 
+(defn count-n [x]
+  (loop [x 132 count 0]
+    (if (pos? x)
+      (recur (quot x 10) (inc count))
+      count)))
+
+(defn ends-same? [n ]
+  (= (mod n 10)
+     (quot n (count ))))
+
+(defn
+  pal-nums [n]
+  (let [count-n (fn [x]
+                  (loop [x x count 0]
+                    (if (pos? x)
+                      (recur (quot x 10) (inc count))
+                      count)))
+
+        same-ends? (fn [x]
+                     (= (mod x 10)
+                        (int (quot x (Math/pow 10 (dec (count-n x)))))))
+
+        ;;count (count-n n)
+
+        next-n (fn [x]
+                 (let [q (quot x 10)]
+                   (int (mod q (Math/pow 10 (dec (count-n q)))))))
+        
+        palindrom? (fn [x]
+                     (loop [x x]
+                       (if (pos? x)
+                         (if (same-ends? x)
+                           (recur (next-n x))
+                           false)
+                         true)))]
+                                        ;(filter palindrom? (iterate inc n))
 
 
-;;(infinite-matrix * 3 5 5 7)
 
+    
+    ;; (fn [x]
+    ;;   (+ (let [step (unchecked-int (Math/pow 10 (- (count-n x) 2)))]
+    ;;        (if (pos? step)
+    ;;          step
+    ;;          1)) x))
 
-;;(take 6 (map #(take 5 %) (infinite-matrix str 3 2)))
+    (filter palindrom?
+            (iterate inc
+                     n))))
+
 
