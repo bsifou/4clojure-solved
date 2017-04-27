@@ -1317,3 +1317,13 @@
     (fn
       [vals]
       (val-of-e form vals))))
+
+
+
+(fn [s]
+  (fn [m]
+    ((fn ev [[f & args]]
+       (apply ({'/ / '+ + '* * '- -} f)
+              (map #(if (coll? %) (ev %) (m % %)) args)))
+     s)))
+
