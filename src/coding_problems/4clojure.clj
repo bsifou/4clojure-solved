@@ -1272,58 +1272,48 @@
 ;; other implementations 
 
 
-(defn palindromic-num [num]
-  (letfn [(reverse-digit [num result]
-            (if (zero? (quot num 10))
-                (+ (mod num 10) (* result 10))
-                (reverse-digit (quot num 10)
-                               (+ (mod num 10) (* result 10)))))
+(defn split-number
+  [n]
+  [(quot (inc n) 2), (quot n 2)])
 
-          (palindromic-in-i-digit [low up]
-            (lazy-cat
-             (lazy-cat
-              (map #(if (< % 10) % (reverse-digit (quot % 10) %)) (range low up))
-              (drop-while
-               zero?
-               (map #(reverse-digit % %) (range low up))))
-             (palindromic-in-i-digit up (* up 10))))]
-    (filter #(>= % num)
-            (let [len (count (.toString num))
-                  digit (quot len 2)
-                  low (quot num (apply * (repeat digit 10N)))
-                  up (apply * (repeat (count (.toString low)) 10N))]
-              (palindromic-in-i-digit low up)))))
+(inc (Long/parseLong (apply str (take 2 (str 313)))))
+
+(defn build 
+  [s left right]
+  (Long/parseLong (apply str (concat (take left s) (reverse (take right s))))))
+
+(defn next-palindrome
+  [n]
+  (let [s (str n)
+        [left _] (split-number (count s))
+        next (inc (Long/parseLong (apply str (take left s))))
+        [new-left new-right] (split-number (count (str (inc n))))]
+    (build (str next) new-left new-right)))
 
 
+; Universal computational Engine 121
 
-(fn [n]
-  (letfn [(log10 [n]
-            (loop [n n l 0]
-              (if (< n 10) l (recur (quot n 10) (inc l)))))
-                                        ; pal make palindromics for a given number of columns
-                                        ; for example (pal 5) returns (10001 10101 ... 99999)
-          (pal [c]
-            (if (= c 1) (range 10)
-                (let [
-                      hc  (quot c 2)                ; 2 in the example
-                      hc10 (apply * (repeat hc 10)) ; 100
-                      dhc10 (if (odd? c) hc10 (/ hc10 10)) ; 100
-                      s (max dhc10 (quot n hc10))
-                      ]
-                  (map
-                   (fn [u]                      ; for example 321
-                     (+ (* hc10 u)             ; 32100 + 23 = 32123
-                        (->> (reverse (str u)) ; (\1 \2 \3)
-                             (#(if (odd? c) (next %) %)) ; (\2 \3)
-                             (drop-while #(= \0 %))      ; (\2 \3)
-                             (apply str)                 ;   "23"
-                             (read-string))))            ;    23
-                   (range s (* 10 dhc10)))))) ; (range 10000 100000)
-          ]
-    (->> (inc (log10 n))
-         (iterate inc)
-         (map pal)
-         (apply concat)
-         (drop-while #(< % n)))))
+(defn app [form]
+  ;; map the op
 
+  ;; check the r
 
+  (let [op-m {'+ +
+              '- -
+              '/ /
+              '* *}
+
+        val-of-e
+        (fn val-of-e [e vals]
+          (if (seq? e)
+            (apply (op-m (first e)) (map #(val-of-e % vals) (rest e)))
+            (get vals e e)))
+          
+        ;; get-val (fn [[op & r] vals]
+        ;;           (if (seq? (first r)) ;; op
+        ;;             (apply f (map #(get-val % vals) r))
+        ;;             (apply f (map #(get vals % %) r))))
+        ]
+    (fn
+      [vals]
+      (val-of-e form vals))))
