@@ -1327,3 +1327,93 @@
               (map #(if (coll? %) (ev %) (m % %)) args)))
      s)))
 
+;; #116 prime sandwitch
+
+(defn prime? [x]
+  )
+
+;; 82
+
+(frequencies "dot")
+
+{\d 1, \o 1, \t 1}
+
+(frequencies "do")
+
+{\d 1, \o 1}
+
+(require 'clojure.data)
+
+(clojure.data/diff (frequencies "dot") (frequencies "do"))
+
+
+(let [[a b _] (clojure.data/diff (frequencies "dot") (frequencies "fot"))] 
+    (or (and (nil? a) (= (count b) 1))
+        (and (nil? b) (= (count a) 1))
+        (and (= (count a) (count b)))))
+
+(defn chain? [w1 w2]
+  (let [[a b _] (clojure.data/diff (frequencies w1) (frequencies w2))] 
+    (or (and (nil? a) (= (count b) 1))
+        (and (nil? b) (= (count a) 1))
+        (and (= (count a) (count b) 1)))))
+
+
+(defn words-chain?
+  [xs]
+  (letfn [(chain? [w1 w2]
+            (let [[a b _] (clojure.data/diff (frequencies w1) (frequencies w2))] 
+              (or (and (nil? a) (= (count b) 1))
+                  (and (nil? b) (= (count a) 1))
+                  (and (= (count a) (count b) 1)))))]
+    (reduce (fn [prev cur]
+              (if (some #(chain? % cur) )
+                cur
+                (reduced false)))
+            (sort xs) (sort xs))))
+
+
+(words-chain? #{"hat" "coat" "dog" "cat" "oat" "cot" "hot" "hog"})
+
+(words-chain? #{"cot" "hot" "bat" "fat"})
+
+(words-chain? #{"to" "top" "stop" "tops" "toss"})
+
+
+(words-chain? #{"spout" "do" "pot" "pout" "spot" "dot"})
+
+(words-chain? #{"share" "hares" "shares" "hare" "are"})
+
+
+(sort #{"share" "hares" "shares" "hare" "are"})
+
+("are" "hare" "hares" "share" "shares")
+
+
+("are" "hare" "share" "shares" "share")
+
+
+
+(sort-by identity
+         (fn [x y]
+           (let [[a b _] (clojure.data/diff (frequencies x) (frequencies y))]
+             (cond (and (nil? a) (= (count b) 1)) 1
+                   (and (nil? b) (= (count a) 1)) -1 
+                   :else 0)))
+         '("are" "hare" "hares" "share" "shares"))
+
+
+;; TODO write set permutation func 
+
+(let [set  #{"share" "hares" "shares" "hare" "are"}]
+  (reduce (fn [acc x]
+            (if (some (some-fn #(chain? x %) #(chain?  % x))
+                      (remove (conj acc x) set))
+              (conj acc x)
+              (reduced false)))
+          #{}
+          set))
+
+(defn possiblities [xs]
+  (possiblities (disj xs x)))
+
